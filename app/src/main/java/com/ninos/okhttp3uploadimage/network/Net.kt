@@ -17,22 +17,10 @@ class Net {
         fun getService(): ApiService = Holder.retrofit.create(ApiService::class.java)
     }
 
-    //带cookie的okhttp请求
     private object Holder {
         val retrofit: Retrofit = Retrofit.Builder()
                 .baseUrl(Const.BASE_URL)
-                .client(OkHttpClient().newBuilder().cookieJar(object : CookieJar {
-                    val cookieStore = PersistentCookieStore()
-                    override fun saveFromResponse(url: HttpUrl, cookies: MutableList<Cookie>) {
-                        for (cookie in cookies) {
-                            cookieStore.add(url, cookie)
-                        }
-                    }
-
-                    override fun loadForRequest(url: HttpUrl): MutableList<Cookie> {
-                        return cookieStore.get(url)
-                    }
-                }).build())
+                .client(OkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build()
